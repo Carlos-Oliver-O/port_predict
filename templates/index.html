@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Retraso</title>
+</head>
+<body>
+    <h1>Predicción de Retraso en la Entrega</h1>
+    <form id="prediction-form" action="/predict" method="post">
+        <label for="consignee_address">Consignee Address:</label><br>
+        <input type="text" id="consignee_address" name="consignee_address" required><br><br>
+        
+        <label for="carrier_sasc_code">Carrier SASC Code:</label><br>
+        <input type="text" id="carrier_sasc_code" name="carrier_sasc_code" required><br><br>
+        
+        <label for="loading_port">Loading Port:</label><br>
+        <input type="text" id="loading_port" name="loading_port" required><br><br>
+        
+        <label for="unloading_port">Unloading Port:</label><br>
+        <input type="text" id="unloading_port" name="unloading_port" required><br><br>
+        
+        <label for="estimate_arrival_date_year">Estimate Arrival Date (Year):</label><br>
+        <input type="number" id="estimate_arrival_date_year" name="estimate_arrival_date_year" required><br><br>
+        
+        <label for="estimate_arrival_date_month">Estimate Arrival Date (Month):</label><br>
+        <input type="number" id="estimate_arrival_date_month" name="estimate_arrival_date_month" required><br><br>
+        
+        <label for="estimate_arrival_date_day">Estimate Arrival Date (Day):</label><br>
+        <input type="number" id="estimate_arrival_date_day" name="estimate_arrival_date_day" required><br><br>
+        
+        <input type="submit" value="Predict">
+    </form>
+    
+    <div id="result">
+        <!-- Aquí se mostrarán los resultados de la predicción -->
+    </div>
+    
+    <script>
+        document.getElementById('prediction-form').onsubmit = async function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            
+            let response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+            
+            let result = await response.json();
+            document.getElementById('result').innerText = `Predicción: ${result.prediction}`;
+        };
+    </script>
+</body>
+</html>
+
+
+
+
