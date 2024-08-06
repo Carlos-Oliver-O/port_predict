@@ -1,4 +1,4 @@
-# 🚢 🇺🇸 Predict Cargo Delay - Flask Web App 🇺🇸
+# 🚢 🇺🇸 Predict the delay - Flask Web App 🇺🇸
 
 This project is a web application developed with Flask for Xnova International that predicts the delay in the delivery of shipments in the USA. The prediction is based on a Machine Learning model trained with historical data and processed through a preprocessing pipeline.
 
