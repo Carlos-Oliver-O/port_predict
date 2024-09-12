@@ -4,38 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Predicción de Retraso</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            text-align: left;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
 </head>
 <body>
-    <h1>Predicción de Retraso en la Entrega</h1>
-    <form id="prediction-form" action="/predict" method="post">
-        <label for="consignee_address">Consignee Address:</label><br>
-        <input type="text" id="consignee_address" name="consignee_address" required><br><br>
-        
-        <label for="carrier_sasc_code">Carrier SASC Code:</label><br>
-        <input type="text" id="carrier_sasc_code" name="carrier_sasc_code" required><br><br>
-        
-        <label for="loading_port">Loading Port:</label><br>
-        <input type="text" id="loading_port" name="loading_port" required><br><br>
-        
-        <label for="unloading_port">Unloading Port:</label><br>
-        <input type="text" id="unloading_port" name="unloading_port" required><br><br>
-        
-        <label for="estimate_arrival_date_year">Estimate Arrival Date (Year):</label><br>
-        <input type="number" id="estimate_arrival_date_year" name="estimate_arrival_date_year" required><br><br>
-        
-        <label for="estimate_arrival_date_month">Estimate Arrival Date (Month):</label><br>
-        <input type="number" id="estimate_arrival_date_month" name="estimate_arrival_date_month" required><br><br>
-        
-        <label for="estimate_arrival_date_day">Estimate Arrival Date (Day):</label><br>
-        <input type="number" id="estimate_arrival_date_day" name="estimate_arrival_date_day" required><br><br>
-        
-        <input type="submit" value="Predict">
-    </form>
-    
-    <div id="result">
-        <!-- Aquí se mostrarán los resultados de la predicción -->
+    <div class="container">
+        <h1>Predicción de Retraso en la Entrega</h1>
+        <form id="prediction-form" action="/predict" method="post">
+            <label for="consignee_address">Consignee Address:</label>
+            <input type="text" id="consignee_address" name="consignee_address" required>
+            
+            <label for="carrier_sasc_code">Carrier SASC Code:</label>
+            <input type="text" id="carrier_sasc_code" name="carrier_sasc_code" required>
+            
+            <label for="loading_port">Loading Port:</label>
+            <input type="text" id="loading_port" name="loading_port" required>
+            
+            <label for="unloading_port">Unloading Port:</label>
+            <input type="text" id="unloading_port" name="unloading_port" required>
+            
+            <label for="estimate_arrival_date_year">Estimate Arrival Date (Year):</label>
+            <input type="number" id="estimate_arrival_date_year" name="estimate_arrival_date_year" required>
+            
+            <label for="estimate_arrival_date_month">Estimate Arrival Date (Month):</label>
+            <input type="number" id="estimate_arrival_date_month" name="estimate_arrival_date_month" required>
+            
+            <label for="estimate_arrival_date_day">Estimate Arrival Date (Day):</label>
+            <input type="number" id="estimate_arrival_date_day" name="estimate_arrival_date_day" required>
+            
+            <input type="submit" value="Predict">
+        </form>
     </div>
-    
+
+    <!-- Modal -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <h2>Resultado de la Predicción</h2>
+            <p id="modal-result">Predicción: </p>
+            <button class="close-btn" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+
     <script>
         document.getElementById('prediction-form').onsubmit = async function(event) {
             event.preventDefault();
@@ -48,12 +170,18 @@
             });
             
             let result = await response.json();
-            document.getElementById('result').innerText = `Predicción: ${result.prediction}`;
+            document.getElementById('modal-result').innerText = `Predicción: ${result.prediction}`;
+            openModal();
         };
+
+        // Funciones para abrir y cerrar el modal
+        function openModal() {
+            document.getElementById('result-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
-
-
-
-
